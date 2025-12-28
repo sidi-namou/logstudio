@@ -20,8 +20,8 @@ RowLayout {
     ComboBox {
         id: portCombo
         enabled: !isConnected
-        model: serialManager.availablePorts()
-        onPressedChanged: if(pressed) model = serialManager.availablePorts()
+        model: dataSourceManager.availablePorts()
+        onPressedChanged: if(pressed) model = dataSourceManager.availablePorts()
         Layout.preferredWidth: 150
     }
     
@@ -86,9 +86,16 @@ RowLayout {
         highlighted: isConnected
         onClicked: {
             if (isConnected) {
-                serialManager.disconnectSerial()
+                dataSourceManager.disconnectSource()
             } else {
-                serialManager.connectSerial(portCombo.currentText, baudCombo.currentText)
+                dataSourceManager.connectSource({
+                    "port": portCombo.currentText,
+                    "baud": parseInt(baudCombo.currentText),
+                    "dataBits": dataBitsCombo.currentText,
+                    "parity": parityCombo.currentText,
+                    "stopBits": stopBitsCombo.currentText,
+                    "flowControl": flowControlCombo.currentText
+                })
             }
         }
     }

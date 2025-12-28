@@ -3,6 +3,7 @@
 #include <QQmlContext>
 #include "DataHub.h"
 #include "SerialPortManager.h"
+#include "DataSourceManager.h"
 
 int main(int argc, char *argv[]) {
     QGuiApplication app(argc, argv);
@@ -11,10 +12,14 @@ int main(int argc, char *argv[]) {
 
     DataHub dataHub;
     SerialPortManager serialManager(&dataHub);
+    DataSourceManager dsManager;
+
+    dsManager.registerSource("Serial", &serialManager);
 
     engine.rootContext()->setContextProperty(QStringLiteral("dataHub"), &dataHub);
-    engine.rootContext()->setContextProperty(QStringLiteral("serialManager"), &serialManager);
+    engine.rootContext()->setContextProperty(QStringLiteral("dataSourceManager"), &dsManager);
 
     engine.loadFromModule("LogStudio", "Main");
+
     return app.exec();
 }

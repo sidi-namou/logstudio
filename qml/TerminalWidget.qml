@@ -34,6 +34,13 @@ Item {
         RowLayout {
             Layout.fillWidth: true
             
+            ComboBox {
+                id: modeSelector
+                model: dataSourceManager.availableModes
+                onActivated: dataSourceManager.setMode(currentText)
+                Layout.preferredWidth: 100
+            }
+
             TextField {
                 id: inputField
                 Layout.fillWidth: true
@@ -45,7 +52,7 @@ Item {
                 id: sendBtn
                 text: "Send"
                 onClicked: {
-                    serialManager.sendData(inputField.text)
+                    dataSourceManager.sendData(inputField.text)
                     inputField.text = ""
                 }
             }

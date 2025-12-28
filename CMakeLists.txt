@@ -29,6 +29,8 @@ qt_add_qml_module(appLogStudio
             src/datasource/SerialPortManager.h
             src/datasource/DataSource.cpp
             src/datasource/DataSource.h
+            src/datasource/DataSourceManager.cpp
+            src/datasource/DataSourceManager.h
             # src/plot/ (Future Plotting Widgets)
     QML_FILES qml/Main.qml
               qml/TerminalWidget.qml
