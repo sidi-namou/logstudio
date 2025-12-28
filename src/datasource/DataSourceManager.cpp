@@ -16,7 +16,9 @@ void DataSourceManager::setMode(const QString &mode) {
     if (m_sources.contains(mode)) {
         if (m_currentSource != m_sources[mode]) {
             m_currentSource = m_sources[mode];
+            m_currentMode = mode;
             emit currentSourceChanged();
+            emit currentModeChanged();
         }
     }
 }
@@ -49,6 +51,10 @@ QStringList DataSourceManager::availablePorts() {
 
 DataSource* DataSourceManager::currentSource() const {
     return m_currentSource;
+}
+
+QString DataSourceManager::currentMode() const {
+    return m_currentMode;
 }
 
 QStringList DataSourceManager::availableModes() const {

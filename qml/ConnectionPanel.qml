@@ -18,7 +18,23 @@ RowLayout {
     }
 
     ComboBox {
+        id: modeCombo
+        enabled: !isConnected
+        model: dataSourceManager.availableModes
+        Layout.preferredWidth: 100
+        onActivated: dataSourceManager.setMode(currentText)
+
+        // Sync with backend state
+        Connections {
+            target: dataSourceManager
+            function onCurrentModeChanged() { modeCombo.currentIndex = modeCombo.indexOfValue(dataSourceManager.currentMode) }
+        }
+        Component.onCompleted: currentIndex = indexOfValue(dataSourceManager.currentMode)
+    }
+
+    ComboBox {
         id: portCombo
+        visible: dataSourceManager.currentMode === "Serial"
         enabled: !isConnected
         model: dataSourceManager.availablePorts()
         onPressedChanged: if(pressed) model = dataSourceManager.availablePorts()
@@ -27,6 +43,7 @@ RowLayout {
     
     ComboBox {
         id: baudCombo
+        visible: dataSourceManager.currentMode === "Serial"
         enabled: !isConnected
         model: [9600, 19200, 38400, 57600, 115200]
         currentIndex: 4
@@ -35,6 +52,7 @@ RowLayout {
 
         Button {
         text: "Settings"
+        visible: dataSourceManager.currentMode === "Serial"
         enabled: !isConnected
         onClicked: settingsDialog.open()
     }
@@ -88,14 +106,18 @@ RowLayout {
             if (isConnected) {
                 dataSourceManager.disconnectSource()
             } else {
-                dataSourceManager.connectSource({
-                    "port": portCombo.currentText,
-                    "baud": parseInt(baudCombo.currentText),
-                    "dataBits": dataBitsCombo.currentText,
-                    "parity": parityCombo.currentText,
-                    "stopBits": stopBitsCombo.currentText,
-                    "flowControl": flowControlCombo.currentText
-                })
+                var settings = {}
+                if (dataSourceManager.currentMode === "Serial") {
+                    settings["port"] = portCombo.currentText
+                    settings["baud"] = parseInt(baudCombo.currentText)
+                    settings["dataBits"] = dataBitsCombo.currentText
+                    settings["parity"] = parityCombo.currentText
+                    settings["stopBits"] = stopBitsCombo.currentText
+                    settings["flowControl"] = flowControlCombo.currentText
+                }
+                // Add other modes (SSH, Modbus) logic here in the future
+                
+                dataSourceManager.connectSource(settings)
             }
         }
     }

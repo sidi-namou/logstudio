@@ -23,7 +23,7 @@ Item {
                     target: dataHub
                     function onDataUpdated(key, value) {
                         if (key === "serial_rx") {
-                            terminalOutput.append(value.data)
+                            terminalOutput.insert(terminalOutput.length, value.data)
                         }
                     }
                 }
@@ -34,13 +34,6 @@ Item {
         RowLayout {
             Layout.fillWidth: true
             
-            ComboBox {
-                id: modeSelector
-                model: dataSourceManager.availableModes
-                onActivated: dataSourceManager.setMode(currentText)
-                Layout.preferredWidth: 100
-            }
-
             TextField {
                 id: inputField
                 Layout.fillWidth: true
